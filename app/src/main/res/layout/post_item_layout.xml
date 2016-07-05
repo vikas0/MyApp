@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    card_view:cardElevation="@dimen/margin_x"
+    card_view:cardUseCompatPadding="true"
+    android:layout_marginBottom="@dimen/margin_x"
+    card_view:cardCornerRadius="@dimen/margin_x">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_forum_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="4dp"
+            android:text="forum_title"
+            android:textColor="@color/colorPrimary"
+            />
+
+        <ImageView
+            android:id="@+id/iv_right_arrow"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/right_arrow"
+            android:layout_toRightOf="@id/tv_forum_title"
+            android:layout_alignTop="@id/tv_forum_title"
+            android:layout_marginLeft="10dp"/>
+        <TextView
+            android:id="@+id/tv_topic_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:layout_alignTop="@id/tv_forum_title"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/iv_right_arrow"
+            android:text="topic_title"/>
+        <View
+            android:id="@+id/v_sep"
+            android:textColor="@color/grey"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_below="@id/tv_forum_title"
+            android:layout_marginTop="4dp"/>
+        <ImageView
+            android:id="@+id/iv_user_icon"
+            android:layout_width="@dimen/icon_dim"
+            android:layout_height="@dimen/icon_dim"
+            android:layout_below="@id/v_sep"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/right_arrow"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_user_name"
+            android:text="userName"
+            android:layout_alignTop="@id/iv_user_icon"
+            android:layout_toRightOf="@id/iv_user_icon"
+            android:layout_marginLeft="@dimen/margin_x2"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_karma"
+            android:textColor="@color/colorPrimary"
+            android:layout_below="@id/tv_user_name"
+            android:text="karma"
+            android:layout_alignLeft="@id/tv_user_name"
+          />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_post_text"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="@dimen/margin_x2"
+            android:layout_below="@id/tv_karma"
+            android:text="post text"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_liked"
+            android:text="n Dimer Liked"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+
+            android:layout_margin="@dimen/margin_x2"/>
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>
