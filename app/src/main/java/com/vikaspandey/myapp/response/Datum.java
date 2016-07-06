@@ -4,6 +4,7 @@ package com.vikaspandey.myapp.response;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.vikaspandey.myapp.db.Forum;
+import com.vikaspandey.myapp.db.Post;
 import com.vikaspandey.myapp.db.Topic;
 import com.vikaspandey.myapp.db.User;
 
@@ -11,7 +12,7 @@ public class Datum {
 
     @SerializedName("id")
     @Expose
-    private Integer id;
+    private Long id;
     @SerializedName("text")
     @Expose
     private String text;
@@ -20,7 +21,7 @@ public class Datum {
     private String textRaw;
     @SerializedName("created_at")
     @Expose
-    private Integer createdAt;
+    private Long createdAt;
     @SerializedName("like_count")
     @Expose
     private Integer likeCount;
@@ -42,7 +43,7 @@ public class Datum {
      * @return
      *     The id
      */
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
@@ -51,7 +52,7 @@ public class Datum {
      * @param id
      *     The id
      */
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -96,7 +97,7 @@ public class Datum {
      * @return
      *     The createdAt
      */
-    public Integer getCreatedAt() {
+    public Long getCreatedAt() {
         return createdAt;
     }
 
@@ -105,7 +106,7 @@ public class Datum {
      * @param createdAt
      *     The created_at
      */
-    public void setCreatedAt(Integer createdAt) {
+    public void setCreatedAt(Long createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -197,6 +198,11 @@ public class Datum {
      */
     public void setForum(Forum forum) {
         this.forum = forum;
+    }
+
+    public Post getPost()
+    {
+        return new Post( id,text,textRaw,createdAt,likeCount,postLikeStatus,getUser().getId(),getTopic().getId(),getForum().getId() );
     }
 
 }
