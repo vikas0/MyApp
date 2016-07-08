@@ -126,7 +126,6 @@ public class RecentPostsActivity extends AppCompatActivity {
                   Toast.makeText(getApplicationContext(),"Please try Later!",Toast.LENGTH_LONG).show();
 
 
-                  finish();
               }
           }
       });
