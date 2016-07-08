@@ -1,5 +1,9 @@
 package com.vikaspandey.myapp.activity;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -43,54 +47,45 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity {
+public class RecentPostsActivity extends AppCompatActivity {
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
+
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
     private ViewPager mViewPager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         updateData();
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        initToolbarPager();
 
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
     }
+    private void initToolbarPager()
+{
+    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    toolbar.setTitle("Forums");
+    setSupportActionBar(toolbar);
+    // Create the adapter that will return a fragment for each of the three
+    // primary sections of the activity.
+    mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
+    // Set up the ViewPager with the sections adapter.
+    mViewPager = (ViewPager) findViewById(R.id.container);
+    mViewPager.setAdapter(mSectionsPagerAdapter);
+
+    TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+    tabLayout.setupWithViewPager(mViewPager);
+}
   private void updateData()
-  {  String getPostUrl = "http://139.162.46.29/v2/posts.json";
+  {  final ProgressDialog progressDialog = new ProgressDialog(this);
+      progressDialog.setTitle("Loading");
+      progressDialog.show();
+      String getPostUrl = "http://139.162.46.29/v2/posts.json";
       Map<String,String> headers = new HashMap<>();
       headers.put("X-Desidime-Client", "0c50c23d1ac0ec18eedee20ea0cdce91ea68a20e9503b2ad77f44dab982034b0");
 
@@ -102,28 +97,42 @@ public class MainActivity extends AppCompatActivity {
       final PostDao postDao =daoSession.getPostDao();
       final ForumDao forumDao=daoSession.getForumDao();
 
-   GsonRequest gsonRequest = new GsonRequest<ResponsePost>(getPostUrl, ResponsePost.class, headers, new Response.Listener<ResponsePost>() {
-       @Override
-       public void onResponse(ResponsePost response) {
- List<Datum> datumList = response.getData();
+      GsonRequest gsonRequest = new GsonRequest<ResponsePost>(getPostUrl, ResponsePost.class, headers, new Response.Listener<ResponsePost>() {
+          @Override
+          public void onResponse(ResponsePost response) {
+              List<Datum> datumList = response.getData();
 
-           for(int i=0;i<datumList.size();i++)
-           {
-               Datum datum = datumList.get(i);
-                userDao.insertOrReplace(datum.getUser());
-               forumDao.insertOrReplace(datum.getForum());
-               topicDao.insertOrReplace(datum.getTopic());
-               postDao.insertOrReplace(datum.getPost());
-           }
-
-       }
-   },new Response.ErrorListener() {
-              @Override
-              public void onErrorResponse(VolleyError error) {
-Log.d("error", error.toString());
+              for(int i=0;i<datumList.size();i++)
+              {
+                  Datum datum = datumList.get(i);
+                  userDao.insertOrReplace(datum.getUser());
+                  forumDao.insertOrReplace(datum.getForum());
+                  topicDao.insertOrReplace(datum.getTopic());
+                  postDao.insertOrReplace(datum.getPost());
+                  setSharedPrefrence();
+                  progressDialog.cancel();
               }
+
+          }
+      },new Response.ErrorListener() {
+          @Override
+          public void onErrorResponse(VolleyError error) {
+              Log.d("error", error.toString());
+              progressDialog.cancel();
+              if(ispostUpdated()==false)
+              {  if(( (MyApp)getApplicationContext()).isNetworkConnected()==false)
+                  Toast.makeText(getApplicationContext(),"No Internet",Toast.LENGTH_LONG).show();
+              else
+                  Toast.makeText(getApplicationContext(),"Please try Later!",Toast.LENGTH_LONG).show();
+
+
+                  finish();
+              }
+          }
       });
       MySingleton.getInstance(this).getRequestQueue().add(gsonRequest);
+
+
   }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -140,9 +149,7 @@ Log.d("error", error.toString());
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -186,5 +193,16 @@ Log.d("error", error.toString());
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-
+    private boolean ispostUpdated()
+    {
+        SharedPreferences preferences = getSharedPreferences("myPref",MODE_PRIVATE);
+        return preferences.getBoolean("key1",false);
+    }
+    private void setSharedPrefrence()
+    {
+        SharedPreferences preferences = getSharedPreferences("myPref", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("key1",true);
+        editor.commit();
+    }
 }
