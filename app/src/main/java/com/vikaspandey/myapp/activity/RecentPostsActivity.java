@@ -124,8 +124,6 @@ public class RecentPostsActivity extends AppCompatActivity {
                   Toast.makeText(getApplicationContext(),"No Internet",Toast.LENGTH_LONG).show();
               else
                   Toast.makeText(getApplicationContext(),"Please try Later!",Toast.LENGTH_LONG).show();
-
-
               }
           }
       });
