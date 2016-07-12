@@ -14,26 +14,29 @@ import com.vikaspandey.myapp.R;
 import com.vikaspandey.myapp.activity.ThredDetailActivity;
 import com.vikaspandey.myapp.app.MyApp;
 import com.vikaspandey.myapp.db.Post;
+import com.vikaspandey.myapp.db.PostDao;
 import com.vikaspandey.myapp.utils.MySingleton;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by vikas pandey on 7/6/2016.
+ * Created by vikas pandey on 7/7/2016.
  */
-public class MyPostAdapter extends RecyclerView.Adapter<MyPostAdapter.ViewHolder>{
-List<Post> postList;
+public class ThreadDetailAdapter extends RecyclerView.Adapter<ThreadDetailAdapter.ViewHolder>{
+    List<Post> postList;
+    Long topic_id;
     Context actContext;
-    public MyPostAdapter(Context context) {
+    public ThreadDetailAdapter(Context context,Long topic_id) {
         actContext =context;
-        postList =((MyApp) actContext.getApplicationContext()).getDaoSession().getPostDao().loadAll();
+       this.topic_id=topic_id;
+        postList =((MyApp) actContext.getApplicationContext()).getDaoSession().getPostDao().queryDeep("where T.\"" + PostDao.Properties.Topic_id.columnName + "\" = " + topic_id);
+//        postList =((MyApp) actContext.getApplicationContext()).getDaoSession().getPostDao().loadDeep()
+
 
     }
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        public TextView tv_forum_title;
-        public TextView tv_topic_title;
         public TextView tv_user_name;
         public NetworkImageView iv_user_icon;
         public TextView tv_post_text;
@@ -43,8 +46,7 @@ List<Post> postList;
 
         public ViewHolder(View v) {
             super(v);
-          tv_forum_title = (TextView)v.findViewById(R.id.tv_forum_title);
-            tv_topic_title = (TextView)v.findViewById(R.id.tv_topic_title);
+
 
             tv_user_name = (TextView)v.findViewById(R.id.tv_user_name);
             tv_post_text = (TextView)v.findViewById(R.id.tv_post_text);
@@ -56,9 +58,10 @@ List<Post> postList;
         }
     }
     @Override
-    public MyPostAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ThreadDetailAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.post_item_layout, parent, false);
+                .inflate(R.layout.thread_item_layout, parent, false);
+
 
         ViewHolder vh = new ViewHolder(v);
         return vh;
@@ -66,16 +69,13 @@ List<Post> postList;
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        if(postList.size()==0)
+        {
+            holder.tv_user_name.setText("No Thread Detail");
+            return;
+        }
         final Post post = postList.get(position);
-        holder.tv_forum_title.setText(post.getForum().getTitle());
-        holder.tv_topic_title.setText(post.getTopic().getTitle());
-        holder.tv_topic_title.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                actContext.startActivity(new Intent(actContext, ThredDetailActivity.class).putExtra("topic_id",post.getTopic_id())
-                .putExtra("title",post.getTopic().getTitle()));
-            }
-        });
+
         holder.tv_user_name.setText(post.getUser().getName());
         holder.tv_post_text.setText(Html.fromHtml(post.getText()));
         holder.tv_liked.setText(post.getLike_count()+" Dimer Liked");
@@ -106,7 +106,8 @@ List<Post> postList;
 
     @Override
     public int getItemCount() {
-
+if(postList.size()==0)
+    return 1;
         return postList.size();
     }
 

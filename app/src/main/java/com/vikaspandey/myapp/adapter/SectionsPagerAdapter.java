@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.vikaspandey.myapp.Fragment.FragmentForum;
 import com.vikaspandey.myapp.Fragment.FramentPosts;
 
 /**
@@ -20,7 +21,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
 
-        return new FramentPosts();
+        return (position ==1)? new FramentPosts():new FragmentForum();
 
     }
 

@@ -12,44 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/tv_forum_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_margin="4dp"
-            android:text="forum_title"
-            android:textColor="@color/colorPrimary"
-            />
 
-        <ImageView
-            android:id="@+id/iv_right_arrow"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/right_arrow"
-            android:layout_toRightOf="@id/tv_forum_title"
-            android:layout_alignTop="@id/tv_forum_title"
-            android:layout_marginLeft="10dp"/>
-        <TextView
-            android:id="@+id/tv_topic_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:textColor="@color/colorPrimary"
-            android:layout_alignTop="@id/tv_forum_title"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@id/iv_right_arrow"
-            android:text="topic_title"/>
-        <TextView
-            android:id="@+id/v_sep"
-            android:textColor="@color/grey"
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-
-            android:layout_below="@id/tv_forum_title"
-            android:layout_marginTop="4dp"/>
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/iv_user_icon"
             android:layout_width="@dimen/icon_dim"
@@ -89,12 +52,12 @@
             android:layout_below="@id/tv_user_name"
             android:text="karma"
             android:layout_alignLeft="@id/tv_user_name"
-          />
+            />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tv_post_text"
-         android:textColor="#000"
+            android:textColor="#000"
             android:layout_alignParentLeft="true"
             android:layout_margin="@dimen/margin_x2"
             android:layout_below="@id/tv_karma"
